@@ -1,46 +1,56 @@
-import pygame, random, sys, time
+import pygame, sys, time, die
 
 pygame.init()
+font = pygame.font.SysFont('Arial', 25)
+pygame.display.set_caption('Yahtzee')
 
-mainWindowSize = windowWidth, windowHeight = 900, 150
+mainWindowSize = windowWidth, windowHeight = 170 + 150*5, 147+5
 
 white = 255, 255, 255
-
+grey = 205, 201, 201
+black = 0, 0, 0
+btnsize = 10, 10, 150, 50
 screen = pygame.display.set_mode(mainWindowSize)
+screen.fill(white)
 
-results = [0, 0, 0, 0, 0, 0] #first 5 for results, last for roll number
-keep = [False, False, False, False, False] #if true don't reroll
-n = 0
-roll = 0
+#inicialize dice
+dice = [die.die(), die.die(), die.die(), die.die(), die.die()]
+roll = 1
+
+for n in range(0, 5):
+    dice[n].setLocation(170 + 150*n, 5)
 
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            n = 0
-    
-    if n < 5:
-        result1 = random.randrange(1, 6, 1)
-        die1 = pygame.image.load("./dice/die_face_"+str(result1)+".png")
-        result2 = random.randrange(1, 6, 1)
-        die2 = pygame.image.load("./dice/die_face_"+str(result2)+".png")
-        result3 = random.randrange(1, 6, 1)
-        die3 = pygame.image.load("./dice/die_face_"+str(result3)+".png")
-        result4 = random.randrange(1, 6, 1)
-        die4 = pygame.image.load("./dice/die_face_"+str(result4)+".png")
-        result5 = random.randrange(1, 6, 1)
-        die5 = pygame.image.load("./dice/die_face_"+str(result5)+".png")
-        time.sleep(0.1)
-        screen.fill(white)
-        screen.blit(die1, [150, 0])
-        screen.blit(die2, [300, 0])
-        screen.blit(die3, [450, 0])
-        screen.blit(die4, [600, 0])
-        screen.blit(die5, [750, 0])
-        pygame.display.flip()
-        n = n + 1
-    results = [result1, result2, result3, result4, result5, roll]
-
-
-
+           x, y = event.pos
+           #roll button click
+           if (x < 140 and y < 60) and (x > 10 and y > 10):
+            roll += 1
+            if roll > 3:
+                roll = 1
+                for n in range(0, 5):
+                    dice[n].setKeep(False)
+            for n in range(0, 5):
+                dice[n].roll()
+           #dice click
+           elif (x > 170 and x < 170 + 5*150) and y < 147:
+                for n in range(0, 5):
+                    if (x > 170 + n*150 and x < 170 + (n+1)*150):
+                        if dice[n].getKeep() == False:
+                            dice[n].setKeep(True)
+                        else:
+                            dice[n].setKeep(False)
+    #update screen
+    screen.fill(white)
+    for n in range(0, 5):
+        image = dice[n].getValue()
+        die = pygame.image.load(image)
+        screen.blit(die, dice[n].getLocation())
+        if dice[n].getKeep() == True:
+            pygame.draw.rect(screen, black, (170 + n*150, 5, 140, 137), 10)
+    pygame.draw.rect(screen, grey, btnsize, 0)
+    screen.blit(font.render('Roll ' + str(roll), True, black, grey), [50, 20])
+    pygame.display.flip()
