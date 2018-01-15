@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 pygame.init()
 cellfont = pygame.font.SysFont('Arial', 12)
@@ -23,6 +24,51 @@ while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        elif event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
+            #print pos
+            r = 0
+            c = 0
+            if pos[0] > 90 and pos[0] < 120:
+                c = 1
+            elif pos[0] > 120 and pos[0] < 150:
+                c = 2
+            elif pos[0] > 150 and pos[0] < 180:
+                c = 3
+            elif pos[0] > 180 and pos[0] < 210:
+                c = 4
+            elif pos[0] > 210 and pos[0] < 240:
+                c = 5
+            elif pos[0] > 240 and pos[0] < 270:
+                c = 6
+            if pos[1] > 27 and pos[1] < 43:
+                r = 1
+            elif pos[1] > 43 and pos[1] < 59:
+                r = 2
+            elif pos[1] > 59 and pos[1] < 75:
+                r = 3
+            elif pos[1] > 75 and pos[1] < 91:
+                r = 4
+            elif pos[1] > 91 and pos[1] < 107:
+                r = 5
+            elif pos[1] > 107 and pos[1] < 123:
+                r = 6
+            elif pos[1] > 182 and pos[1] < 198:
+                r = 7
+            elif pos[1] > 198 and pos[1] < 214:
+                r = 8
+            elif pos[1] > 214 and pos[1] < 230:
+                r = 9
+            elif pos[1] > 230 and pos[1] < 246:
+                r = 10
+            elif pos[1] > 246 and pos[1] < 262:
+                r = 11
+            elif pos[1] > 262 and pos[1] < 278:
+                r = 12
+            elif pos[1] > 278 and pos[1] < 294:
+                r = 13
+            print "r "+str(r)
+            print "c "+str(c)
     #text and grid
     screen.blit(cellfont.render('Column State', True, black, white), [5, 5+1])
     pygame.draw.line(screen, black, (smallGap, 5), (windowWidth - 5,5), 1)
